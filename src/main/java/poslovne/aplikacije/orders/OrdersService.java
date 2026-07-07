@@ -39,6 +39,8 @@ public class OrdersService {
         // Postavi datum kreiranja
         porudzbina.setDatumKreiranja(LocalDate.now());
         
+        porudzbina.setRokZaUplatu(LocalDate.now().plusDays(8));
+        
         // Postavi default marzu za svaku stavku (15%)
         for (StavkaPorudzbine stavka : porudzbina.getStavke()) {
             if (stavka.getMarza() == null || stavka.getMarza() == 0) {
@@ -56,7 +58,7 @@ public class OrdersService {
         
         // Posalji event da je kreirana nova porudzbina
         rabbitTemplate.convertAndSend(
-            RabbitMQConfigurator.PROIZVODI_TOPIC_EXCHANGE_NAME,
+            RabbitMQConfigurator.APP_EVENTS_EXCHANGE,
             "orders.events.new",
             new ShipmentRequest(savedPorudzbina)
         );
@@ -115,7 +117,7 @@ public class OrdersService {
             // Posalji ShipmentRequest za dalje procesuiranje
             ShipmentRequest request = new ShipmentRequest(porudzbina);
             rabbitTemplate.convertAndSend(
-                RabbitMQConfigurator.PROIZVODI_TOPIC_EXCHANGE_NAME,
+                RabbitMQConfigurator.APP_EVENTS_EXCHANGE,
                 "orders.events.confirmed",
                 request
             );

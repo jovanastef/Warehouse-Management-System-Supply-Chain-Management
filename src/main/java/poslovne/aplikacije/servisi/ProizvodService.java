@@ -22,7 +22,7 @@ public class ProizvodService {
     public Proizvod noviProizvod(@RequestBody Proizvod noviProizvod) {
         if (noviProizvod == null) throw new ProizvodIsNullException();
         proizvodRepository.save(noviProizvod);
-        rabbitTemplate.convertAndSend(RabbitMQConfigurator.PROIZVODI_TOPIC_EXCHANGE_NAME, 
+        rabbitTemplate.convertAndSend(RabbitMQConfigurator.APP_EVENTS_EXCHANGE, 
             "proizvodi.events.create",
             ProizvodEvent.createNewProizvodEvent(noviProizvod));
         return noviProizvod;
@@ -33,7 +33,7 @@ public class ProizvodService {
             .orElseThrow(() -> new ProizvodIsNullException());
         updatedProizvod.updateProizvod(noviProizvod);
         proizvodRepository.save(updatedProizvod);
-        rabbitTemplate.convertAndSend(RabbitMQConfigurator.PROIZVODI_TOPIC_EXCHANGE_NAME, 
+        rabbitTemplate.convertAndSend(RabbitMQConfigurator.APP_EVENTS_EXCHANGE, 
             "proizvodi.events.update",
             ProizvodEvent.createUpdatedProizvodEvent(updatedProizvod));
         return updatedProizvod;
@@ -43,7 +43,7 @@ public class ProizvodService {
         Proizvod p = proizvodRepository.findById(id)
             .orElseThrow(() -> new ProizvodNotFoundException(id));
         proizvodRepository.deleteById(id);
-        rabbitTemplate.convertAndSend(RabbitMQConfigurator.PROIZVODI_TOPIC_EXCHANGE_NAME, 
+        rabbitTemplate.convertAndSend(RabbitMQConfigurator.APP_EVENTS_EXCHANGE, 
             "proizvodi.events.delete",
             ProizvodEvent.createDeletedProizvodEvent(p));
         return p;

@@ -29,6 +29,8 @@ public class Porudzbina implements Serializable {
     private String gradIsporuke;
     private Double ukupanIznos = 0.0;
     
+    private LocalDate rokZaUplatu;
+    
     @Enumerated(EnumType.STRING)
     private StatusPorudzbine status = StatusPorudzbine.KREIRANA;
     
@@ -71,6 +73,9 @@ public class Porudzbina implements Serializable {
     
     public Double getUkupanIznos() { return ukupanIznos; }
     public void setUkupanIznos(Double ukupanIznos) { this.ukupanIznos = ukupanIznos; }
+    
+    public LocalDate getRokZaUplatu() { return rokZaUplatu; }
+    public void setRokZaUplatu(LocalDate rokZaUplatu) { this.rokZaUplatu = rokZaUplatu; }
     
     public StatusPorudzbine getStatus() { return status; }
     public void setStatus(StatusPorudzbine status) { this.status = status; }
