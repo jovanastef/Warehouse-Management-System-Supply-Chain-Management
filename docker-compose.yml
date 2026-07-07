@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: wms_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: poslovne_db
+      MYSQL_USER: wms_user
+      MYSQL_PASSWORD: wms_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - wms_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: wms_phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - wms_network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: wms_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - wms_network
+
+  inventory-service:
+    build: ./inventory-service
+    container_name: wms_inventory
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/poslovne_db
+      SPRING_RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - mysql
+      - rabbitmq
+    networks:
+      - wms_network
+
+  orders-service:
+    build: ./orders-service
+    container_name: wms_orders
+    ports:
+      - "8082:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/poslovne_db
+      SPRING_RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - mysql
+      - rabbitmq
+    networks:
+      - wms_network
+
+  billing-service:
+    build: ./billing-service
+    container_name: wms_billing
+    ports:
+      - "8083:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/poslovne_db
+      SPRING_RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - mysql
+      - rabbitmq
+    networks:
+      - wms_network
+
+volumes:
+  mysql_data:
+
+networks:
+  wms_network:
+    driver: bridge
