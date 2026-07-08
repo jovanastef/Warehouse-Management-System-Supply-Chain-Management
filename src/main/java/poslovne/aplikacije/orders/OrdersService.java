@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import poslovne.aplikacije.RabbitMQConfigurator;
 import poslovne.aplikacije.inventory.InventoryService;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrdersService {
@@ -87,7 +88,7 @@ public class OrdersService {
     }
     
     // POTVRDA PORUDZBINE I REZERVACIJA
-    
+    @Transactional
     public Porudzbina confirmOrder(Long porudzbinaId) {
         Porudzbina porudzbina = porudzbinaRepository.findById(porudzbinaId)
             .orElseThrow(() -> new RuntimeException("Porudzbina nije pronadjena"));
@@ -143,7 +144,7 @@ public class OrdersService {
     }
     
     // OTKAZIVANJE PORUDZBINE
-    
+    @Transactional
     public Porudzbina cancelOrder(Long porudzbinaId) {
         Porudzbina porudzbina = porudzbinaRepository.findById(porudzbinaId)
             .orElseThrow(() -> new RuntimeException("Porudzbina nije pronadjena"));

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import poslovne.aplikacije.proizvodi.Proizvod;
 import poslovne.aplikacije.repository.ProizvodRepository;
 
@@ -76,7 +78,7 @@ public class InventoryService {
     }
     
     // REZERVACIJE
-    
+    @Transactional
     public boolean rezervisiRobu(Long magacinId, Long proizvodId, Double kolicina) {
         Magacin magacin = magacinRepository.findById(magacinId)
             .orElseThrow(() -> new RuntimeException("Magacin nije pronadjen"));
@@ -109,6 +111,7 @@ public class InventoryService {
         }
     }
     
+    @Transactional
     public void potvrdiRezervaciju(Long magacinId, Long proizvodId, Double kolicina) {
         Magacin magacin = magacinRepository.findById(magacinId)
             .orElseThrow(() -> new RuntimeException("Magacin nije pronadjen"));

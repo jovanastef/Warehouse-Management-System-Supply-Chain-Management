@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import poslovne.aplikacije.inventory.InventoryMessageListener;
 import poslovne.aplikacije.messaging.MessagingReportingService;
 import poslovne.aplikacije.orders.OrdersMessageListener;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 
 @Configuration
 public class RabbitMQConfigurator {
@@ -100,5 +102,10 @@ public class RabbitMQConfigurator {
     @Bean
     public MessageListenerAdapter inventoryListenerAdapter(InventoryMessageListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
+    }
+    
+    @Bean
+    public MessageConverter jsonMessageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
 }
