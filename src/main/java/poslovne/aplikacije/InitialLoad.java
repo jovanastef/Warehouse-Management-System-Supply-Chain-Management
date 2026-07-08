@@ -19,6 +19,12 @@ public class InitialLoad {
     @Bean
     public CommandLineRunner demo(ProizvodRepository repository, ProizvodService proizvodService) {
         return (args) -> {
+        	// Proveri da li vec postoje podaci
+        	if (repository.count() > 0) {
+        		log.info("Proizvodi vec postoje u bazi, preskacem inicijalizaciju");
+        		return;
+        	}
+        	
             Proizvod p = null;
             
             p = new Proizvod(1, "Koka Kola");

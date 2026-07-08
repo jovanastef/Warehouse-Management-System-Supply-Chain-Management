@@ -19,6 +19,12 @@ public class InitialLoadInventory {
                                            StanjeZalihaRepository stanjeZalihaRepository,
                                            ProizvodRepository proizvodRepository) {
         return (args) -> {
+        	// Proveri da li vec postoje podaci
+        	if (magacinRepository.count() > 0) {
+        		log.info("Magacini vec postoje u bazi, preskacem inicijalizaciju");
+        		return;
+        	}
+        	
             // Kreiraj magacine
             Magacin m1 = new Magacin("M001", "Centralni Magacin Beograd", "Bulevar Oslobodjenja 123", "Beograd");
             Magacin m2 = new Magacin("M002", "Magacin Novi Sad", "Njegoseva 45", "Novi Sad");

@@ -18,7 +18,7 @@ public class OrdersController {
     @Autowired
     private OrdersService ordersService;
     
-    // PORUDZBINA ENDPOINTS =====
+    // PORUDZBINA ENDPOINTS
     
     @GetMapping("/porudzbine")
     public List<Porudzbina> getAllPorudzbine() {
